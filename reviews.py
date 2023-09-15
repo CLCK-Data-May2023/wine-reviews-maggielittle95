@@ -9,9 +9,11 @@ with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
         df = pd.read_csv(csv_file)
 
 wine_reviews = pd.read_csv("data/winemag-data-130k-v2.csv.zip")
-country_points = wine_reviews[['country', 'points']]
+#country_points = wine_reviews[['country', 'points']]
+avg_country_points = wine_reviews.groupby('country')['points'].mean().reset_index()
+avg_country_points['points'] = avg_country_points['points'].round()
 count_of_wines = (wine_reviews.country.value_counts())
 #print(country_points, count_of_wines,)
-answer = pd.merge(country_points, count_of_wines, on='country')
+answer = pd.merge(avg_country_points, count_of_wines, on='country')
 print(answer)
 answer.to_csv('data/reviews-per-country.csv')
